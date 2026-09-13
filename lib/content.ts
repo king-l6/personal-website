@@ -28,83 +28,103 @@ export type Photo = {
   id: string
   /** Placeholder source. Swap for `/photos/<your-file>.jpg` and drop the file in /public. */
   src: string
-  /** Describe the photograph itself once you replace it. */
+  /**
+   * Describes the photograph that is on the page right now. Each `alt` below
+   * describes the stand-in image, not the one the caption names — rewrite it
+   * when you substitute your own.
+   */
   alt: string
+  /** The caption to show once this slot holds your own photograph. */
   title: string
   meta: string
+  /**
+   * True while `src` points at a stand-in. Renders a visible marker under the
+   * caption. Set it to false as you replace each photograph.
+   */
+  placeholder: boolean
 }
 
 const frame = (seed: string) => `https://picsum.photos/seed/${seed}/1200/1500`
 
 export const hero = {
   src: "https://picsum.photos/seed/harbour-at-dawn/2400/1350",
-  alt: "A wide, empty shoreline at first light, the water almost still.",
+  alt: "A stone college building with pinnacles and tall windows, seen across a wide lawn under a blue sky.",
   caption: "Harbour at dawn — Lofoten, 2024",
+  placeholder: true,
 }
 
 export const photos: Photo[] = [
   {
     id: "still-water",
     src: frame("still-water"),
-    alt: "Reflections on a windless lake at dusk.",
+    alt: "Frosted grass across an open field, with a dark treeline along the horizon.",
     title: "Still Water",
     meta: "Lofoten, 2024",
+    placeholder: true,
   },
   {
     id: "mira",
     src: frame("mira-portrait"),
-    alt: "A portrait of a woman standing in soft window light.",
+    alt: "Tall grasses lit from behind at golden hour, the highlights thrown out of focus.",
     title: "Mira",
     meta: "Portrait, 2023",
+    placeholder: true,
   },
   {
     id: "the-long-field",
     src: frame("the-long-field"),
-    alt: "A wide field of dry grass under a low, clouded sky.",
+    alt: "A pale, motion-blurred shape against a blue-white background.",
     title: "The Long Field",
     meta: "Jutland, 2024",
+    placeholder: true,
   },
   {
     id: "kitchen-table",
     src: frame("kitchen-table-sunday"),
-    alt: "Hands resting on a kitchen table beside a half-empty cup.",
+    alt: "A city street at night in long exposure, with warm trails of light running along the road.",
     title: "Kitchen Table",
     meta: "Sunday, 2023",
+    placeholder: true,
   },
   {
     id: "northbound",
     src: frame("northbound-bergen"),
-    alt: "A ferry crossing grey water toward a line of hills.",
+    alt: "A silhouetted figure mid-jump against a bright sunset sky above a dark ridge.",
     title: "Northbound",
     meta: "Bergen, 2022",
+    placeholder: true,
   },
   {
     id: "hands",
     src: frame("hands-studio"),
-    alt: "Close study of two pairs of hands meeting.",
+    alt: "A pale dirt path curving through bare trees on a hillside.",
     title: "Hands",
     meta: "Studio, 2024",
+    placeholder: true,
   },
   {
     id: "rain-on-glass",
     src: frame("rain-on-glass-kyoto"),
-    alt: "Rain running down a window, a garden blurred behind it.",
+    alt: "A twilight sky fading from deep blue to orange above a dark horizon.",
     title: "Rain on Glass",
     meta: "Kyoto, 2023",
+    placeholder: true,
   },
   {
     id: "sisters",
     src: frame("sisters-alesund"),
-    alt: "Two sisters standing shoulder to shoulder against a pale wall.",
+    alt: "The facade of a tall building with fire escapes, catching warm light.",
     title: "Sisters",
     meta: "Ålesund, 2022",
+    placeholder: true,
   },
   {
     id: "last-light",
     src: frame("last-light-dolomites"),
-    alt: "The last band of light along a ridge of mountains.",
+    alt: "A rocky shoreline at sunset, with orange light across the water.",
     title: "Last Light",
     meta: "Dolomites, 2024",
+    placeholder: true,
   },
 ]
 

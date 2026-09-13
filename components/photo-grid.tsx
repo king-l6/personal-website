@@ -17,13 +17,20 @@ export function PhotoGrid() {
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
               />
             </div>
-            <figcaption className="mt-4 flex items-baseline justify-between gap-4 border-t border-border pt-4">
-              <span className="font-heading text-lg leading-none">
-                {photo.title}
-              </span>
-              <span className="font-mono text-[11px] text-muted-foreground">
-                {photo.meta}
-              </span>
+            <figcaption className="mt-4 border-t border-border pt-4">
+              <div className="flex items-baseline justify-between gap-4">
+                <span className="font-heading text-lg leading-none">
+                  {photo.title}
+                </span>
+                <span className="font-mono text-[11px] text-muted-foreground">
+                  {photo.meta}
+                </span>
+              </div>
+              {photo.placeholder ? (
+                <p className="mt-2 font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase">
+                  Placeholder — replace with your own photograph
+                </p>
+              ) : null}
             </figcaption>
           </figure>
         </li>

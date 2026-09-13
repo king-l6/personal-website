@@ -23,7 +23,7 @@ export default function Page() {
           <p className="mt-9 max-w-xl text-[15px] leading-[1.85] text-pretty text-muted-foreground">
             I work slowly and mostly with available light, which means fewer
             frames and longer afternoons. Most of what you see here was made
-            within a day's drive of the sea.
+            within a day’s drive of the sea.
           </p>
         </section>
 
@@ -40,6 +40,9 @@ export default function Page() {
           </div>
           <figcaption className="mx-auto max-w-6xl px-6 pt-4 font-mono text-[11px] text-muted-foreground">
             {hero.caption}
+            {hero.placeholder
+              ? " · placeholder image, replace with your own photograph"
+              : null}
           </figcaption>
         </figure>
 
@@ -51,7 +54,7 @@ export default function Page() {
             <div className="md:col-span-5">
               <Eyebrow className="text-muted-foreground">Introduction</Eyebrow>
               <h2 className="mt-6 font-heading text-3xl leading-[1.15] font-light sm:text-4xl">
-                I'm a photographer based in {site.location}, working in{" "}
+                I’m a photographer based in {site.location}, working in{" "}
                 <em className="italic">portrait, landscape and documentary</em>.
               </h2>
             </div>
@@ -67,7 +70,7 @@ export default function Page() {
               </p>
               <p>
                 I shoot on film and digital, edit everything myself, and print
-                the work I care about. If you'd like pictures of a person, a
+                the work I care about. If you’d like pictures of a person, a
                 place, or a stretch of time, write to me and tell me about it.
               </p>
             </div>
@@ -108,7 +111,8 @@ export default function Page() {
                 </h2>
               </div>
               <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-                Nine pictures from the last few years, in no particular order.
+                Every image below is a stand-in, captioned with the photograph
+                that belongs in its place. See the README for the list.
               </p>
             </div>
 
@@ -149,7 +153,7 @@ export default function Page() {
           <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
             <Eyebrow className="text-background/60">Contact</Eyebrow>
             <h2 className="mt-8 max-w-3xl font-heading text-3xl leading-[1.12] font-light text-balance sm:text-5xl">
-              Tell me what you have in mind, and I'll tell you how I'd shoot it.
+              Tell me what you have in mind, and I’ll tell you how I’d shoot it.
             </h2>
 
             <a

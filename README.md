@@ -15,6 +15,10 @@ pnpm typecheck
 pnpm lint
 ```
 
+`eslint` is pinned to `^9` on purpose. `eslint-config-next` accepts `>=9`, but
+the `eslint-plugin-react` it depends on peers at `^9.7`, so installing ESLint 10
+makes `pnpm lint` crash on load rather than report anything.
+
 Fonts are loaded through `next/font/google`: Cormorant Garamond for display
 type, Inter for text, Geist Mono for the small labels and photo captions.
 
@@ -44,8 +48,18 @@ at them, e.g. `src: "/photos/still-water.jpg"`.
 | 09 Last Light     | `photos[8]`                   | Ridge at last light           | Landscape, Dolomites                             |
 
 The gallery is a uniform 4:5 crop, so the images are all rendered in portrait
-orientation. `alt` text on each entry describes the intended picture rather
-than the placeholder, so update those too if the subject changes.
+orientation.
+
+While a slot holds a stand-in, its `alt` text describes the photograph that is
+actually on the page, so a screen reader is not told something untrue, and the
+caption names the photograph that belongs there with a `Placeholder` tag
+beneath it. When you drop in your own file:
+
+1. rewrite `alt` to describe it,
+2. set `placeholder: false` on that entry.
+
+That drops the tag for that slot only, so you can replace the pictures a few at
+a time. The hero image works the same way.
 
 Once every photo is local, `images.remotePatterns` in `next.config.ts` can be
 deleted.
