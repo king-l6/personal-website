@@ -33,18 +33,50 @@ function asString(value: unknown) {
 /**
  * Pulls the JSON object out of a model reply. Models sometimes wrap it in a
  * markdown fence or add a sentence before it, so this is deliberately tolerant
- * about everything outside the outermost braces.
+ * about everything outside the object.
+ *
+ * The end of the object is found by matching braces rather than by taking the
+ * last `}` in the reply: prose after the JSON ("use {} for placeholders") would
+ * otherwise be swallowed into the slice and break the parse.
  */
 function extractJsonObject(raw: string) {
   const cleaned = raw.replace(/```(?:json)?/gi, "").trim()
   const start = cleaned.indexOf("{")
-  const end = cleaned.lastIndexOf("}")
 
-  if (start === -1 || end <= start) {
+  if (start === -1) {
     throw new Error("no JSON object found in the model reply")
   }
 
-  return JSON.parse(cleaned.slice(start, end + 1)) as Record<string, unknown>
+  let depth = 0
+  let inString = false
+  let escaped = false
+
+  for (let index = start; index < cleaned.length; index += 1) {
+    const char = cleaned[index]
+
+    if (inString) {
+      if (escaped) escaped = false
+      else if (char === "\\") escaped = true
+      else if (char === '"') inString = false
+      continue
+    }
+
+    if (char === '"') {
+      inString = true
+    } else if (char === "{") {
+      depth += 1
+    } else if (char === "}") {
+      depth -= 1
+      if (depth === 0) {
+        return JSON.parse(cleaned.slice(start, index + 1)) as Record<
+          string,
+          unknown
+        >
+      }
+    }
+  }
+
+  throw new Error("the model reply has an unterminated JSON object")
 }
 
 export function parseStudioPrompt(raw: string): StudioPrompt {

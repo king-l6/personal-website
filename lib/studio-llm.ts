@@ -1,4 +1,4 @@
-import Anthropic, { APIError, AnthropicError } from "@anthropic-ai/sdk"
+import Anthropic, { APIError } from "@anthropic-ai/sdk"
 
 import { parseStudioPrompt, type StudioPrompt } from "@/lib/studio-prompt"
 
@@ -8,7 +8,6 @@ import { parseStudioPrompt, type StudioPrompt } from "@/lib/studio-prompt"
  */
 
 const MAX_TOKENS = 1024
-const MAX_ERROR_LENGTH = 300
 
 const SYSTEM_PROMPT = `You are a prompt engineer for a photographer's studio. The photographer writes a short idea; you turn it into one production-ready image-generation prompt.
 
@@ -54,20 +53,16 @@ function readConfig() {
 }
 
 function describeGatewayError(error: unknown) {
-  if (error instanceof APIError) {
-    const detail = (error.message || "请求失败").slice(0, MAX_ERROR_LENGTH)
-    return `LLM 网关返回 ${error.status ?? "未知状态"}：${detail}`
-  }
+  // The gateway's own error body can name internal hosts and projects, so the
+  // browser only ever sees a status code. The full error stays in the server
+  // log, where whoever runs the deployment can read it.
+  console.error("[studio] LLM gateway call failed", error)
 
-  if (error instanceof AnthropicError) {
-    return `调用 LLM 网关失败：${error.message.slice(0, MAX_ERROR_LENGTH)}`
-  }
+  const status = error instanceof APIError ? error.status : undefined
 
-  if (error instanceof Error) {
-    return `调用 LLM 网关失败：${error.message.slice(0, MAX_ERROR_LENGTH)}`
-  }
-
-  return "调用 LLM 网关时发生未知错误。"
+  return status
+    ? `LLM 网关返回 ${status}，请稍后重试；持续失败请查看服务端日志。`
+    : "调用 LLM 网关失败，请稍后重试；持续失败请查看服务端日志。"
 }
 
 export async function generateStudioPrompt(idea: string): Promise<StudioPrompt> {

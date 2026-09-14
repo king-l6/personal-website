@@ -101,6 +101,16 @@ export default function StudioPage() {
                         <p className="text-[15px] leading-[1.85] text-pretty">
                           {stored?.prompt ?? "（这条记录里没有可显示的提示词）"}
                         </p>
+                        {stored?.negativePrompt ? (
+                          <p className="font-mono text-[11px] leading-[1.8] text-muted-foreground">
+                            负面提示词：{stored.negativePrompt}
+                          </p>
+                        ) : null}
+                        {stored?.style ? (
+                          <p className="font-mono text-[11px] leading-[1.8] text-muted-foreground">
+                            风格：{stored.style}
+                          </p>
+                        ) : null}
                       </div>
                     </li>
                   )

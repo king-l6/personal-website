@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useState } from "react"
+import { useActionState, useEffect, useState } from "react"
 
 import { Eyebrow } from "@/components/eyebrow"
 import { Button } from "@/components/ui/button"
@@ -46,11 +46,19 @@ export function StudioForm() {
         </div>
       </form>
 
+      {/* One polite live region covers both outcomes. The generated prompt
+          itself is far too long to read out, so success announces a summary
+          and the three fields are reachable by normal navigation below. */}
+      <p role="status" aria-live="polite" className="sr-only">
+        {state.status === "ok"
+          ? "已生成结构化提示词，结果在下方。"
+          : state.status === "error"
+            ? state.message
+            : ""}
+      </p>
+
       {state.status === "error" ? (
-        <p
-          aria-live="polite"
-          className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
-        >
+        <p className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
           {state.message}
         </p>
       ) : null}
@@ -144,22 +152,48 @@ function PromptField({
 }
 
 function CopyButton({ value }: { value: string }) {
-  const [copied, setCopied] = useState(false)
+  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle")
+
+  useEffect(() => {
+    if (status === "idle") return
+
+    const timer = window.setTimeout(() => setStatus("idle"), 2400)
+    return () => window.clearTimeout(timer)
+  }, [status])
 
   async function copy() {
+    // `navigator.clipboard` is undefined outside a secure context, so a plain
+    // http deployment fails here rather than throwing.
+    if (!navigator.clipboard) {
+      setStatus("failed")
+      return
+    }
+
     try {
       await navigator.clipboard.writeText(value)
-      setCopied(true)
-      window.setTimeout(() => setCopied(false), 1600)
+      setStatus("copied")
     } catch {
-      setCopied(false)
+      setStatus("failed")
     }
   }
 
   return (
-    <Button type="button" variant="outline" size="xs" onClick={copy}>
-      {copied ? "已复制" : "复制"}
-    </Button>
+    <span className="flex flex-wrap items-center justify-end gap-2">
+      <Button
+        type="button"
+        variant="outline"
+        size="xs"
+        onClick={copy}
+        aria-live="polite"
+      >
+        {status === "copied" ? "已复制" : status === "failed" ? "复制失败" : "复制"}
+      </Button>
+      {status === "failed" ? (
+        <span className="font-mono text-[10px] text-destructive">
+          浏览器不允许自动复制，请手动选中
+        </span>
+      ) : null}
+    </span>
   )
 }
 
